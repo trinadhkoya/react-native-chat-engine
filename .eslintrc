@@ -1,0 +1,40 @@
+{
+  "parser": "babel-eslint",
+    "parserOptions": {
+  "sourceType": "module",
+      "allowImportExportEverywhere": false,
+      "codeFrame": true
+},
+  "plugins": [
+  "header",
+  "react"
+],
+    "env": {
+  "node": true,
+      "browser": true,
+      "es6": true
+},
+  "extends": [
+  "airbnb",
+  "eslint:recommended"
+],
+    "rules": {
+  "react/jsx-filename-extension": [
+    1,
+    {
+      "extensions": [
+        ".js",
+        ".jsx"
+      ]
+    }
+  ],
+      "arrow-body-style": "warn",
+      "react/prefer-stateless-function": 0,
+      "import/prefer-default-export": 0,
+      "header/header": [
+    2,
+    "line",
+    "Copyright (c) 2018-present TinMen, Inc. All Rights Reserved"
+  ]
+}
+}
