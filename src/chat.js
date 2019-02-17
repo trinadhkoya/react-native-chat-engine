@@ -84,7 +84,7 @@ export default class ChatScreen extends React.Component {
                 {this.chat.connected ? <View style={styles().chatContainer}>
                         <MessageList chat={this.chat} me={this.me}/>
                     </View> :
-                    <View/>
+                    <View style={styles().chatContainer}/>
                 }
                 <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : -200}>
                     <View style={styles(this.state.whoIsTyping.length > 0).typingIndicator}>

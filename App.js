@@ -7,12 +7,13 @@
  * @lint-ignore-every XPLATJSCOPYRIGHT1
  */
 
+
 import React, {Component} from 'react';
 import {StyleSheet} from 'react-native';
 import AppContainer from "./Routes";
 import ChatEngine from "./config";
 
-
+console.disableYellowBox=true;
 export default class App extends Component<Props> {
 
 
