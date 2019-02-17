@@ -1,9 +1,21 @@
 import React from 'react';
-import { KeyboardAvoidingView, TouchableOpacity, Dimensions, StyleSheet, TextInput, Keyboard, Platform, Button, Text, View } from 'react-native';
-import { Icon } from 'react-native-elements';
-import { MessageList } from 'chat-engine-react-native';
+import {
+    Button,
+    Dimensions,
+    Keyboard,
+    KeyboardAvoidingView,
+    Platform,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View
+} from 'react-native';
+import {Icon} from 'react-native-elements';
+import {MessageList} from 'chat-engine-react-native';
+
 const TypingIndicator = require('chat-engine-typing-indicator');
-const { width } = Dimensions.get('window');
+const {width} = Dimensions.get('window');
 const MAXIMUM_NAMES_IN_TYPING_INDICATOR = 2;
 
 export default class ChatScreen extends React.Component {
@@ -17,14 +29,14 @@ export default class ChatScreen extends React.Component {
      * @return {Object} Reference on object which contain navigation item properties.
      * @private
      */
-    static navigationOptions = ({ navigation, screenProps }) => {
+    static navigationOptions = ({navigation, screenProps}) => {
         const chatChannelComponents = navigation.state.params.chat.channel.split('#');
         return {
             title: chatChannelComponents[chatChannelComponents.length - 1],
             headerRight: <Button
-                color={ screenProps.tintColor }
-                title={ 'Invite' }
-                onPress={ () => navigation.navigate('InviteUser', { chat: navigation.state.params.chat }) } />
+                color={screenProps.tintColor}
+                title={'Invite'}
+                onPress={() => navigation.navigate('InviteUser', {chat: navigation.state.params.chat})}/>
         };
     };
 
@@ -38,7 +50,7 @@ export default class ChatScreen extends React.Component {
         super(properties);
         this.chat = this.props.navigation.state.params.chat;
         this.me = this.props.screenProps.chatEngine.me;
-        this.state = { whoIsTyping: [], chatInput: '' };
+        this.state = {whoIsTyping: [], chatInput: ''};
     }
 
     /**
@@ -68,13 +80,15 @@ export default class ChatScreen extends React.Component {
      */
     render() {
         return (
-            <View style={ styles().container }>
-                <View style={ styles().chatContainer }>
-                    <MessageList chat={ this.chat } me={ this.me } />
-                </View>
-                <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={ Platform.OS === 'ios' ? 0 : -200 }>
-                    <View style={ styles(this.state.whoIsTyping.length > 0).typingIndicator }>
-                        <Text style={ styles().typingIndicatorLabel }>{this.typingIndicatorText()}</Text>
+            <View style={styles().container}>
+                {this.chat.connected ? <View style={styles().chatContainer}>
+                        <MessageList chat={this.chat} me={this.me}/>
+                    </View> :
+                    <View/>
+                }
+                <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : -200}>
+                    <View style={styles(this.state.whoIsTyping.length > 0).typingIndicator}>
+                        <Text style={styles().typingIndicatorLabel}>{this.typingIndicatorText()}</Text>
                     </View>
                     <View style={styles().chatFooter}>
                         <TextInput
@@ -82,13 +96,13 @@ export default class ChatScreen extends React.Component {
                             style={styles().chatInput}
                             underlineColorAndroid="transparent"
                             placeholder="Send Message"
-                            returnKeyType={ 'send' }
-                            onChangeText={ text => { 
-                                this.setState({ chatInput: text });
+                            returnKeyType={'send'}
+                            onChangeText={text => {
+                                this.setState({chatInput: text});
                                 this.chat.typingIndicator.startTyping();
-                            } }
-                            onSubmitEditing={ () => this.onTextInputSubmit() } />
-                        <TouchableOpacity style={{backgroundColor:'#D02129'}}>
+                            }}
+                            onSubmitEditing={() => this.onTextInputSubmit()}/>
+                        <TouchableOpacity style={{backgroundColor: '#D02129'}}>
                             <Icon
                                 reverse
                                 name="send"
@@ -134,7 +148,7 @@ export default class ChatScreen extends React.Component {
             this.chat.emit('message', {
                 text: this.state.chatInput
             });
-            this.setState({ chatInput: '' });
+            this.setState({chatInput: ''});
         }
         if (this.chat.typingIndicator.isTyping) {
             this.chat.typingIndicator.stopTyping();
@@ -150,7 +164,7 @@ export default class ChatScreen extends React.Component {
      */
     handleUserStartTyping(payload) {
         if (!this.state.whoIsTyping.includes(payload.sender.uuid) && payload.sender.uuid !== this.me.uuid) {
-            this.setState({ whoIsTyping: [...this.state.whoIsTyping, payload.sender.uuid] });
+            this.setState({whoIsTyping: [...this.state.whoIsTyping, payload.sender.uuid]});
         }
     }
 
@@ -163,8 +177,10 @@ export default class ChatScreen extends React.Component {
      */
     handleUserStopTyping(payload) {
         if (this.state.whoIsTyping.includes(payload.sender.uuid) && payload.sender.uuid !== this.me.uuid) {
-            this.setState({ whoIsTyping: this.state.whoIsTyping.filter(uuid =>
-                uuid !== payload.sender.uuid) });
+            this.setState({
+                whoIsTyping: this.state.whoIsTyping.filter(uuid =>
+                    uuid !== payload.sender.uuid)
+            });
         }
     }
 
